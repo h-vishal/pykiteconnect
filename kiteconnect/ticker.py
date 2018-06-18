@@ -676,15 +676,15 @@ class KiteTicker(object):
             self._parse_text_message(payload)
 
     def _on_open(self, ws):
-        if self.on_open:
-            return self.on_open(self)
-
         # Resubscribe if its reconnect
         if not self._is_first_connect:
             self.resubscribe()
 
         # Set first connect to false once its connected first time
         self._is_first_connect = False
+
+        if self.on_open:
+            return self.on_open(self)
 
     def _on_reconnect(self, attempts_count):
         if self.on_reconnect:
@@ -708,6 +708,10 @@ class KiteTicker(object):
         # Order update callback
         if self.on_order_update and data.get("type") == "order" and data.get("data"):
             self.on_order_update(self, data["data"])
+
+        # Custom error with websocket error code 0
+        if data.get("type") == "error":
+            self._on_error(self, 0, data.get("data"))
 
     def _parse_binary(self, bin):
         """Parse binary data to a (list of) ticks structure."""
@@ -757,7 +761,7 @@ class KiteTicker(object):
                 if len(packet) == 32:
                     try:
                         timestamp = datetime.fromtimestamp(self._unpack_int(packet, 28, 32))
-                    except TypeError:
+                    except Exception:
                         timestamp = None
 
                     d["timestamp"] = timestamp
@@ -794,12 +798,12 @@ class KiteTicker(object):
                 if len(packet) == 184:
                     try:
                         last_trade_time = datetime.fromtimestamp(self._unpack_int(packet, 44, 48))
-                    except TypeError:
+                    except Exception:
                         last_trade_time = None
 
                     try:
                         timestamp = datetime.fromtimestamp(self._unpack_int(packet, 60, 64))
-                    except TypeError:
+                    except Exception:
                         timestamp = None
 
                     d["last_trade_time"] = last_trade_time
