@@ -18,9 +18,9 @@ with open(os.path.join(current_dir, "kiteconnect", "__version__.py"), "r", "utf-
 # Public URL to download windows wheel
 public_wheels_path = "https://raw.githubusercontent.com/zerodhatech/python-wheels/master/{wheel_name}"
 # Twisted package wheel name
-twisted_wheel_name = "Twisted-17.9.0-cp{version}-cp{version}m-{platform}.whl"
+twisted_wheel_name = "Twisted-18.7.0-cp{version}-cp{version}m-{platform}.whl"
 # Available python versions for Twisted package
-twisted_py_versions = ["34", "35", "36"]
+twisted_py_versions = ["34", "35", "36", "37"]
 
 
 # Install package using pip
@@ -100,11 +100,10 @@ setup(
         "Programming Language :: Python",
         "Natural Language :: English",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Topic :: Office/Business :: Financial :: Investment",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Software Development :: Libraries"
@@ -122,7 +121,7 @@ setup(
     setup_requires=["pytest-runner"],
     extras_require={
         "doc": ["pdoc"],
-        ':sys_platform=="win32"': ["pypiwin32<=220"]
+        ':sys_platform=="win32"': ["pywin32"]
     },
     cmdclass={"install": install, "bdist_wheel": FakeBdist}
 )
